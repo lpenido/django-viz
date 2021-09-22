@@ -1,0 +1,13 @@
+<script type="text/javascript">
+
+var data = [
+  {
+    x: {{ names|safe }},
+    y: {{ counts|safe }},
+    type: 'bar'
+  }
+];
+
+Plotly.newPlot('home', data);
+   
+</script>
