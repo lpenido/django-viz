@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'd3.apps.D3Config',
-    'bokeh.apps.BokehConfig',
+    'bokehplots.apps.BokehPlotsConfig',
 ]
 
 MIDDLEWARE = [

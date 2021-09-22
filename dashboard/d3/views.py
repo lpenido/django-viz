@@ -33,3 +33,6 @@ def record_api(request):
     data = Record.objects.all()
     api_list = [d.to_dict() for d in data]
     return JsonResponse(list(api_list), safe=False)
+
+def debug(request):
+    return render(request, "debug.html")
