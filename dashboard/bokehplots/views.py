@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from .models import Record
-from .utils import chicago_map
+from .utils import create_map_figure, create_bar_figure
 
 import pandas as pd
 import geopandas as gpd
@@ -21,10 +21,9 @@ def barplot(request):
     names = [d.name for d in data]
     counts = [d.count for d in data]
 
-    plot = figure()
-    plot.circle([1,2], [3,4])
+    p = create_bar_figure()
 
-    script, div = components(plot)
+    script, div = components(p)
 
     context = {
         "names": json.dumps(names),
@@ -37,11 +36,14 @@ def barplot(request):
 
 
 def mapplot(request):
-    
-    com_areas = os.getenv("COM_AREAS")
+    """
+    """
+    # Load up the polygon
+    polygons = os.getenv("COM_AREAS")
+    chicago = gpd.read_file(polygons)
 
-    chicago = gpd.read_file(com_areas)
-    chicago["rand"] = pd.Series(np.random.randint(0,100,size=77))
+    # Some random data to make the map pretty
+    chicago["rand"] = pd.Series(np.random.randint(0,100, size=len(chicago)))
     low, high = chicago["rand"].min(), chicago["rand"].max()
     
     # Read data to json and convert to string for Bokeh
@@ -49,12 +51,22 @@ def mapplot(request):
     json_data = json.dumps(chicago_json)
     geosource = GeoJSONDataSource(geojson = json_data)
 
-    # Make sure the same source to enable linking 
-    p = chicago_map(geosource, low, high)
-    q = chicago_map(geosource, low, high)
+    # Config the plot
+    args = {
+        "title": "Chicago Community Areas",
+        "tooltips": [
+            ("Community Area","@community"),
+            ("Random Number", "@rand")
+        ],
+        "low": low,
+        "high": high,
+        "field": "rand",
+        "tools": "help,box_select,tap"
+    }
 
-    # Side by sides 
-    w = gridplot([[p, q]])
+    # Make sure the same source to enable linking 
+    w = create_map_figure(geosource, args)
+
     script, div = components(w)
 
     context = {

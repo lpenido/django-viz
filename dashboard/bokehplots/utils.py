@@ -2,24 +2,31 @@ from bokeh.plotting import figure
 from bokeh.models import LinearColorMapper, ColorBar, HoverTool
 from bokeh.palettes import viridis
 
-def chicago_map(geosource, low, high):
-    
-    TOOLS = "help,box_select,tap"
-    p = figure(title="Chicago Community Areas", toolbar_location=None, tools=TOOLS)
-    hover = HoverTool(tooltips = [
-        ("Community Area","@community"),
-        ("Random Number", "@rand")
-    ])
+def create_bar_figure():
+    p = figure()
+    p.circle([1,2], [3,4])
+    return p
+
+def create_map_figure(source, args):
+    """
+    """
+    p = figure(
+        title = args["title"], 
+        tools = args["tools"],
+        toolbar_location = "above",
+    )
+
+    hover = HoverTool(tooltips=args["tooltips"])
     p.add_tools(hover)
 
-    p.multi_line('x', 'y', source=geosource, color="black", line_width=2)
+    p.multi_line('x', 'y', source=source, color="black", line_width=2)
     p.xgrid.grid_line_color = None
     p.ygrid.grid_line_color = None
 
     color_mapper = LinearColorMapper(
         palette = viridis(10), 
-        low = low, 
-        high = high, 
+        low = args["low"], 
+        high = args["high"], 
     )
 
     color_bar = ColorBar(
@@ -35,8 +42,8 @@ def chicago_map(geosource, low, high):
 
     p.patches(
         "xs","ys", 
-        source = geosource, 
-        fill_color = {"field": "rand", "transform" : color_mapper}, 
+        source = source, 
+        fill_color = {"field": args["field"], "transform" : color_mapper}, 
         line_color = "black", 
         line_width = 0.25, 
         fill_alpha = 1

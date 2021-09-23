@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('', include('bokehplots.urls')),
-    path('', include('d3.urls')),
+    path('bokeh/', include('bokehplots.urls')),
+    path('d3/', include('d3.urls')),
     path('admin/', admin.site.urls),
 
 ]

@@ -2,21 +2,44 @@
   <ul class="nav">
     <li class="nav-item">
       <a class="nav-link active" href="{% url 'home' %}">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link active" href="{% url 'barplot' %}">Barplot</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'networkplot' %}">Network Graph</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'multi' %}">Multiplot</a>
-    </li>
-
-    
     <li class="nav-item">
       <a class="nav-link" href="{% url 'debug' %}">Debug</a>
     </li>
+
+    <div class="btn-group">
+      <button 
+        type="button" 
+        class="btn btn-secondary dropdown-toggle" 
+        data-toggle="dropdown" 
+        aria-haspopup="true" 
+        aria-expanded="false">
+        D3
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="{% url 'd3bar' %}">Barplot</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{% url 'd3network' %}">Network</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{% url 'd3multi' %}">Multi</a>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button 
+        type="button" 
+        class="btn btn-secondary dropdown-toggle" 
+        data-toggle="dropdown" 
+        aria-haspopup="true" 
+        aria-expanded="false">
+        Bokeh
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="{% url 'bbar' %}">Barplot</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{% url 'bmap' %}">Map</a>
+      </div>
+    </div>
+
   </ul>
 </nav>
 
