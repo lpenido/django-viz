@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import os 
 from pathlib import Path
+
+import environ
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,15 +89,13 @@ DATABASES = {
         # 'NAME': BASE_DIR / 'db.sqlite3',
         
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASS"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
-
+        'NAME': env("DB_NAME"),
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASS"),
+        'HOST': env("DB_HOST"),
+        'PORT': env("DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

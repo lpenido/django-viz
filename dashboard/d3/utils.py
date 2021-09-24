@@ -5,7 +5,7 @@ import pandas as pd
 from .models import ScavengerPin
 
 def load_data():
-    scav = os.getenv("SCAV")
+    scav = env("SCAV")
     df = pd.read_csv(scav)
     records = df.to_dict("records")
     
