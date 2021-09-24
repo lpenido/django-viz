@@ -1,24 +1,19 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from .models import Record
+from .models import Record, ScavengerPin
+from .utils import load_data
 
 import json
 
 # Create your views here.
 
 def home(request):
-    data = Record.objects.all()
-    api_list = [d.to_dict() for d in data]
-    names = [d.name for d in data]
-    counts = [d.count for d in data]
-
-    context = {
-        "names": json.dumps(names),
-        "counts": json.dumps(counts)
-    }
-
-    return render(request, "home.html", context=context)
+    
+    if ScavengerPin.objects.filter(id=1).first() == None:
+        load_data()
+    
+    return render(request, "home.html", context={})
 
 def bar_plot(request):
     return render(request, "d3/barplot.html")

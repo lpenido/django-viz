@@ -6,4 +6,5 @@ migrations
 __pycache__
 
 /data
+/postgres
 /env

@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from django.db.models import Count
 
-from .models import Record
+from d3.models import Record, ScavengerPin
 from .utils import create_map_figure, create_bar_figure
 
 import pandas as pd
@@ -8,7 +9,7 @@ import geopandas as gpd
 import numpy as np
 
 from bokeh.embed import components
-from bokeh.models import GeoJSONDataSource
+from bokeh.models import ColumnDataSource, GeoJSONDataSource
 from bokeh.layouts import gridplot
 
 import os
@@ -16,24 +17,47 @@ import json
 
 # Create your views here.
 def barplot(request):
-    data = Record.objects.all()
-    api_list = [d.to_dict() for d in data]
-    names = [d.name for d in data]
-    counts = [d.count for d in data]
+    """
+    """
+    # Load up data
+    result = ScavengerPin.objects.values('classification').annotate(dcount=Count('pin')).order_by()
+    data = {
+        "classification": [str(x["classification"]) for x in result],
+        "dcount": [x["dcount"] for x in result]
+    }
 
-    p = create_bar_figure()
+    source = ColumnDataSource(data=data)
+
+    # Config the plot
+    args = {
+        "x_labs": "classification",# set(data["classification"]),
+        "top": "dcount", # data["dcount"],
+        "title": "Scavenger PINs by Classification",
+        "tooltips": [
+            ("Classification","@classification"),
+            ("PINs", "@dcount")
+        ],
+        "tools": "help,box_select,tap"
+    }
+
+    p = create_bar_figure(source, args)
 
     script, div = components(p)
 
     context = {
-        "names": json.dumps(names),
-        "counts": json.dumps(counts),
         "div": div, 
         "script": script,
     }
-
     return render(request, "bokehplots/barplot.html", context=context)
 
+def scatterplot(request):
+    pass
+
+def histogram(request):
+    pass
+
+def boxplot(request):
+    pass
 
 def mapplot(request):
     """
@@ -64,7 +88,8 @@ def mapplot(request):
         "tools": "help,box_select,tap"
     }
 
-    # Make sure the same source to enable linking 
+    # Make sure the same source if you want to enable linking
+    # across multiple maps 
     w = create_map_figure(geosource, args)
 
     script, div = components(w)

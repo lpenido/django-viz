@@ -2,9 +2,32 @@ from bokeh.plotting import figure
 from bokeh.models import LinearColorMapper, ColorBar, HoverTool
 from bokeh.palettes import viridis
 
-def create_bar_figure():
-    p = figure()
-    p.circle([1,2], [3,4])
+
+def create_bar_figure(source, args):
+    """
+    """
+    p = figure( 
+        width=800, 
+        height=400, 
+        title=args["title"],
+        toolbar_location = "above",
+        tools="help,box_select,tap,zoom_in,zoom_out,pan"
+    )
+    hover = HoverTool(tooltips=args["tooltips"])
+    p.add_tools(hover)
+
+    p.vbar(
+        x='classification', 
+        top=args["top"], 
+        source=source, 
+        width=0.09
+    )
+
+    p.xgrid.grid_line_color = None
+    p.x_range.range_padding = 0.1
+    p.xaxis.major_label_orientation = "vertical"
+    p.y_range.start = 0
+
     return p
 
 def create_map_figure(source, args):
